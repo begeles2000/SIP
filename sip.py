@@ -5,6 +5,10 @@ import i18n
 
 import Adafruit_SSD1306
 
+from PIL import Image
+from PIL import ImageDraw
+from PIL import ImageFont
+
 import subprocess
 import json
 import ast
