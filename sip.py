@@ -68,7 +68,7 @@ def timing_loop():
 
         gv.nowt = time.localtime()   # Current time as time struct.  Updated once per second.
         gv.now = timegm(gv.nowt)   # Current time as timestamp based on local time from the Pi. Updated once per second.
-        
+        draw = ImageDraw.Draw(image)
         draw.rectangle((0,0,width,height), outline=0, fill=0)
         draw.text((x, top), "Prueba: " + "HOLA MUNDO", font=font, fill=255)
         draw.text((x, top+8), str(gv.nowt), font=font, fill=255)
