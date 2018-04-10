@@ -52,7 +52,7 @@ def timing_loop():
         pass
     last_min = 0
     while True:  # infinite loop
-        RST = 5
+        RST = 24
         disp = Adafruit_SSD1306.SSD1306_128_32(rst=RST)
         disp.begin()
         disp.clear()
