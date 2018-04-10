@@ -47,6 +47,11 @@ def timing_loop():
     """ ***** Main timing algorithm. Runs in a separate thread.***** """
     try:
         print _('Starting timing loop') + '\n'
+        
+    except Exception:
+        pass
+    last_min = 0
+    while True:  # infinite loop
         disp = Adafruit_SSD1306.SSD1306_128_32(rst=RST)
         disp.begin()
         disp.clear()
@@ -63,12 +68,7 @@ def timing_loop():
         bottom = height-padding
         # Move left to right keeping track of the current x position for drawing shapes.
         x = 0
-        font = ImageFont.load_default()
-    except Exception:
-        pass
-    last_min = 0
-    while True:  # infinite loop
-               
+        font = ImageFont.load_default()       
 
         gv.nowt = time.localtime()   # Current time as time struct.  Updated once per second.
         gv.now = timegm(gv.nowt)   # Current time as timestamp based on local time from the Pi. Updated once per second.
