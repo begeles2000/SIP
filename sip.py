@@ -64,8 +64,7 @@ def timing_loop():
         pass
     last_min = 0
     while True:  # infinite loop
-        d
-        
+               
 
         gv.nowt = time.localtime()   # Current time as time struct.  Updated once per second.
         gv.now = timegm(gv.nowt)   # Current time as timestamp based on local time from the Pi. Updated once per second.
