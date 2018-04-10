@@ -3,12 +3,6 @@
 
 import i18n
 
-import Adafruit_SSD1306
-
-from PIL import Image
-from PIL import ImageDraw
-from PIL import ImageFont
-
 import subprocess
 import json
 import ast
@@ -46,40 +40,15 @@ gv.restarted = 1
 def timing_loop():
     """ ***** Main timing algorithm. Runs in a separate thread.***** """
     try:
-        print _('Starting timing loop') + '\n'
-        
+        print _('Starting timing loop') + '\n'        
     except Exception:
         pass
     last_min = 0
     while True:  # infinite loop
-        RST = None
-        disp = Adafruit_SSD1306.SSD1306_128_32(rst=RST)
-        disp.begin()
-        disp.clear()
-        disp.display()
-        width = disp.width
-        height = disp.height
-        image = Image.new('1', (width, height))
-        draw = ImageDraw.Draw(image)
-        draw.rectangle((0,0,width,height), outline=0, fill=0)
-        # Draw some shapes.
-        # First define some constants to allow easy resizing of shapes.
-        padding = -2
-        top = padding
-        bottom = height-padding
-        # Move left to right keeping track of the current x position for drawing shapes.
-        x = 0
-        font = ImageFont.load_default()       
-
+          
         gv.nowt = time.localtime()   # Current time as time struct.  Updated once per second.
         gv.now = timegm(gv.nowt)   # Current time as timestamp based on local time from the Pi. Updated once per second.
-        draw = ImageDraw.Draw(image)
-        draw.rectangle((0,0,width,height), outline=0, fill=0)
-        draw.text((x, top), "Prueba: " + "HOLA MUNDO", font=font, fill=255)
-        draw.text((x, top+8), str(gv.nowt), font=font, fill=255)
-        disp.image(image)
-        disp.display()
-        
+                
         if (gv.sd['en'] 
             and not gv.sd['mm'] 
             and (not gv.sd['bsy'] or not gv.sd['seq'])
