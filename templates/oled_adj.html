@@ -1,0 +1,79 @@
+$def with(m_vals)
+
+$var title: SIP OLED settings
+$var page: plugins
+
+<script>
+    // Initialize behaviors
+    jQuery(document).ready(function(){
+
+        jQuery("#cSubmit").click(function() {
+            jQuery("#pluginForm").submit();
+        });
+        jQuery("button#cCancel").click(function(){
+            window.location="/";
+        });
+
+    });
+</script>
+
+<div id="plugin">
+    <div class="title">LCD settings</div>
+    <p>This plugin sends data to I2C for OLED 16x32 char with SSD1306</p>
+    <form id="pluginForm" action="/oleda" method="get">
+        <table class="optionList">
+            <tr>
+                <td style='text-transform: none;'>I2C:</td>
+                <td>
+                    <input name='use_oled' type='checkbox'${" checked" if m_vals['use_oled'] == "on" else ""}>   
+                </td>
+            </tr>
+			<tr>
+                <td style='text-transform: none;'>Adress RST PIN:<br>(default 24)</td>
+                <td>
+                    <input name='adress' type='text' value=$m_vals["adress"]>
+                </td>
+            </tr>
+            <tr>
+                <td style='text-transform: none;' rowspan="8" >Display</td>
+                <td>
+                    SW Version:</td><td> <input name='d_sw_version' type='checkbox'${" checked" if m_vals['d_sw_version'] == "on" else ""}>
+                </td>
+                <tr><td>
+                    IP: </td><td><input name='d_ip' type='checkbox'${" checked" if m_vals['d_ip'] == "on" else ""}>
+                </td></tr>
+                <tr><td>
+                    Port: </td><td><input name='d_port' type='checkbox'${" checked" if m_vals['d_port'] == "on" else ""}>
+                </td></tr>
+                <tr><td>
+                    CPU Temp: </td><td><input name='d_cpu_temp' type='checkbox'${" checked" if m_vals['d_cpu_temp'] == "on" else ""}>
+                </td></tr>
+                <tr><td>
+                    Time and Date: </td><td><input name='d_date_time' type='checkbox'${" checked" if m_vals['d_date_time'] == "on" else ""}>
+                </td></tr>
+                 <tr><td>
+                    Uptime: </td><td><input name='d_uptime' type='checkbox'${" checked" if m_vals['d_uptime'] == "on" else ""}>
+                </td></tr>
+                <tr><td>
+                    Rain Sensor: </td><td><input name='d_rain_sensor' type='checkbox'${" checked" if m_vals['d_rain_sensor'] == "on" else ""}>
+                </td></tr>
+                <tr><td>
+                    Running Stations: </td><td><input name='d_running_stations' type='checkbox'${" checked" if m_vals['d_running_stations'] == "on" else ""}>
+                </td></tr>
+            </tr>
+            <tr>
+                <td style='text-transform: none;'>Status:</td>
+                <td>
+                    <textarea style="font-family: monospace;" rows="7" cols="35" readonly>$m_vals['status']</textarea>
+                </td>
+            </tr>
+        </table>
+    </form>
+<p>Compatible with HD44780 LCD 16x2 controller.</p>
+</div>
+<div id="controls">
+    <button id="cSubmit" class="submit"><b>Submit</b></button>
+    <button id="cCancel" class="cancel danger">Cancel</button>
+</div>
+                                  
+                     
