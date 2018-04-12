@@ -59,7 +59,7 @@ try:
     if gv.platform == 'pi':  # If this will run on Raspberry Pi:
         GPIO.setmode(GPIO.BOARD)
         pin_rain_sense = gv.pin_map[8]
-        pin_relay = gv.pin_map[10]
+        pin_relay = gv.pin_map[10]        
     elif gv.platform == 'bo':  # If this will run on Beagle Bone Black:
         pin_rain_sense = gv.pin_map[15]
         pin_relay = gv.pin_map[16]
@@ -73,7 +73,7 @@ try:
         pi.set_mode(pin_relay, pigpio.OUTPUT)
     else:      
         GPIO.setup(pin_rain_sense, GPIO.IN, pull_up_down = GPIO.PUD_UP)
-        GPIO.setup(pin_relay, GPIO.OUT)
+        GPIO.setup(pin_relay, GPIO.OUT)        
 except NameError:
     pass
 

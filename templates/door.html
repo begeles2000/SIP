@@ -1,0 +1,87 @@
+$def with (m_vals)
+
+$var title: $_('SIP - Door controll')
+$var page: plugins
+<script>
+   // Initialize behaviors
+   jQuery(document).ready(function(){
+
+      jQuery("#cSubmit").click(function() {
+         jQuery("#pluginForm").submit();
+      });
+      jQuery("button#cCancel").click(function(){
+         window.location="/";
+      });
+	  //Actuate buttons
+	  //full open door
+	  jQuery("#cFull").click(function() {
+         console.log('Abro la puerta');
+      });
+	  //semi open door
+	  jQuery("#cSemi").click(function() {
+         jQuery("#pluginForm").submit();
+      });
+
+       jQuery("button#docButton").click(function(){
+		   //TODO documentation for this plugin
+           window.open(baseUrl + "/static/docs/plugins/relay_6-docs.html", "_blank");
+       })
+
+   });
+</script>
+
+<div id="plugin">
+   <div class="title">$_('Door controll Settings')
+   <button class="execute" id="docButton" type="button" >$_('Setup Help')</button>
+   </div>
+   <p>$_('This plugin allows SIP to control a garage door')
+   </p>
+   <br>
+   <form id="pluginForm" action="/dooru" method="get">
+   <table class="optionList">
+    <tr>
+        <td style='text-transform: none;'>$_('Enable door controll'):</td>
+        <td><input type="checkbox" name="enabled" ${"checked" if m_vals['enabled']=='on' else "off"}></td>
+    </tr>
+   	<tr>
+        <td style='text-transform: none;'>$_('Full open'):</td>
+        <td><input type="checkbox" name="o_full" ${"checked" if m_vals['o_full']=='on' else "off"}></td>
+    </tr>
+	<tr>
+        <td style='text-transform: none;'>$_('Semi open'):</td>
+        <td><input type="checkbox" name="o_semi" ${"checked" if m_vals['o_semi']=='on' else "off"}></td>
+    </tr>
+	<tr>
+        <td style='text-transform: none;'>$_('Sensor'):</td>
+        <td><input type="checkbox" name="o_semi" ${"checked" if m_vals['o_sens']=='on' else "off"}></td>
+    </tr>
+	  <tr> 
+	  <td style='text-transform: none;'>$_('Trigger Level'):</td>
+	  <td>
+	   <div class='option' title='Low level trigger (Active low) means the relay turns on when the input is low and turns off when the input is high. Hith level trigger (Active high) does the opposite.'>
+	      <input type="radio" name="active" value="low" ${" checked" if m_vals[u"active"]==u"low" else ""}>$_('Low')
+	      <input type="radio" name="active" value="high" ${" checked" if m_vals[u"active"]==u"high" else ""}>$_('High')
+	      <span class='tooltip'>$_('Active low means the relay turns on when the input is low and turns off when the input is high. Active high does the opposite.')</span>
+	   </div></td>
+	  </tr>
+      <tr> 
+	  <td style='text-transform: none;'>$_('Sensor type'):</td>
+	  <td>
+	   <div class='option' title='Define the type of sensor used: NC / NO (normally closed sensor, normally open sensor)'>
+	      <input type="radio" name="sens_t" value="no" ${" checked" if m_vals[u"sens_t"]==u"no" else ""}>$_('NO')
+	      <input type="radio" name="sens_t" value="nc" ${" checked" if m_vals[u"sens_t"]==u"nc" else ""}>$_('NC')
+	      <span class='tooltip'>$_('Normally Open (NO) is a contact that does not flow current in its normal state.Energizing it and switching it on will close the contact, causing it to allow current flow.. Active high does the opposite.')</span>
+	   </div></td>
+	  </tr> 	  
+   </table>
+   <br>
+   
+  <p>Relays must be connected to the following GPIOS: 38 for Full open, 40 for Semi open, and sensor to pin 19</p>
+   </form>
+</div>
+<div id="controls">
+    <button id="cSubmit" class="submit"><b>$_('Submit')</b></button>
+    <button id="cCancel" class="cancel danger">$_('Cancel')</button>
+	<button id="cFull" class="cancel danger">$_('Full open')</button>
+	<button id="cSemi" class="cancel danger">$_('Semi open')</button>
+</div>
