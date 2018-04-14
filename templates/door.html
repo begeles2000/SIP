@@ -12,15 +12,15 @@ $var page: plugins
       jQuery("button#cCancel").click(function(){
          window.location="/";
       });
+	  
 	  //Actuate buttons
 	  //full open door
 	  jQuery("#cFull").click(function() {
-		 jQuery("#pluginForm").attr('action', "/doorf").submit();
-         console.log('Abro la puerta');
+		 jQuery("#pluginForm").attr('', "/doorf").submit();         
       });
 	  //semi open door
 	  jQuery("#cSemi").click(function() {
-         jQuery("#pluginForm").submit();
+         jQuery("#pluginForm").attr('', "/doors").submit();  
       });
 
        jQuery("button#docButton").click(function(){
@@ -42,19 +42,19 @@ $var page: plugins
    <table class="optionList">
     <tr>
         <td style='text-transform: none;'>$_('Enable door control'):</td>
-        <td><input type="checkbox" name="enabled" ${"checked" if m_vals['enabled']=='on' else "off"}></td>
+        <td><input type="checkbox" name="enabled" ${"checked" if m_vals['enabled']=="on" else ""}></td>
     </tr>
    	<tr>
         <td style='text-transform: none;'>$_('Full open'):</td>
-        <td><input type="checkbox" name="o_full" ${"checked" if m_vals['o_full']=='on' else "off"}></td>
+        <td><input type="checkbox" name="o_full" ${"checked" if m_vals['o_full']=="on" else ""}></td>
     </tr>
 	<tr>
         <td style='text-transform: none;'>$_('Semi open'):</td>
-        <td><input type="checkbox" name="o_semi" ${"checked" if m_vals['o_semi']=='on' else "off"}></td>
+        <td><input type="checkbox" name="o_semi" ${"checked" if m_vals['o_semi']=="on" else ""}></td>
     </tr>
 	<tr>
         <td style='text-transform: none;'>$_('Sensor'):</td>
-        <td><input type="checkbox" name="o_semi" ${"checked" if m_vals['o_sens']=='on' else "off"}></td>
+        <td><input type="checkbox" name="o_sens" ${"checked" if m_vals['o_sens']=="on" else ""}></td>
     </tr>
 	  <tr> 
 	  <td style='text-transform: none;'>$_('Trigger Level'):</td>
@@ -69,8 +69,8 @@ $var page: plugins
 	  <td style='text-transform: none;'>$_('Sensor type'):</td>
 	  <td>
 	   <div class='option' title='Define the type of sensor used: NC / NO (normally closed sensor, normally open sensor)'>
-	      <input type="radio" name="sens_t" value="no" ${" checked" if m_vals[u"sens_t"]==u"no" else ""}>$_('NO')
-	      <input type="radio" name="sens_t" value="nc" ${" checked" if m_vals[u"sens_t"]==u"nc" else ""}>$_('NC')
+	      <input type="radio" name="sens_t" value="no" ${" checked" if m_vals[u"sens_t"]==u"NO" else ""}>$_('NO')
+	      <input type="radio" name="sens_t" value="nc" ${" checked" if m_vals[u"sens_t"]==u"NC" else ""}>$_('NC')
 	      <span class='tooltip'>$_('Normally Open (NO) is a contact that does not flow current in its normal state.Energizing it and switching it on will close the contact, causing it to allow current flow.. Active high does the opposite.')</span>
 	   </div></td>
 	  </tr> 	  
@@ -78,12 +78,12 @@ $var page: plugins
 	<br>
     <table class="optionList">
 		<tr>
-			<td>Estado actual: </td> 
-			<td> AquiIraElEstado</td>			
+			<td><b>Estado actual:</b> </td> 
+			<td> $m_vals['status']</td>			
 		</tr>
 		<tr>
-		<td>Ultima apertura: </td>
-		<td>HoraUltimaApertura</td>
+		<td><b>Ultima apertura:</b> </td>
+		<td>$m_vals['last']</td>
 		</tr>
    
     </table>

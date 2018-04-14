@@ -21,6 +21,7 @@ except IOError:
 # Add a new url to open the data entry page.
 urls.extend(['/door', 'plugins.door.settings',
  	'/doorf', 'plugins.door.fullOpen',
+    '/doors', 'plugins.door.semiOpen',
 	'/dooru', 'plugins.door.update']) 
 
 # Add this plugin to the home page plugins menu
@@ -38,10 +39,12 @@ def load_params():
         params = {
             'enabled': 'off',
             'o_full': 'on',
-            'o_semi': 'off',
+            'o_semi': 'on',
             'o_sens': 'off',
             'sens_t': 'NO',
-            'active': 'low'
+            'active': 'low',
+            'last':   '0',
+            'status':'closed'
         }
         with open('./data/door.json', 'w') as f:
             json.dump(params, f)
@@ -66,7 +69,6 @@ try:
                 relay_pins[i] = 0    
     else:
         print 'Door control plugin only supported on pi.'
-    print ("Paso 1 he definido los relay pins", relay_pins)
 except:
   print 'Door control: GPIO pins not set'
   pass
@@ -76,12 +78,8 @@ except:
 #### setup also GPIO inputs and either NO or NC       ####
 def init_pins():
     global pi
-    print ("ahora voy a ponerlos en modo output")
     try:
-        print ("entro al try y usare esta variable", relay_pins)
-        print ("para saber el rango de ", range(len(relay_pins)))
         for i in range(len(relay_pins)):
-            print("entro al bucle for")
             if gv.use_pigpio:
                 pi.set_mode(relay_pins[i], pigpio.OUTPUT)
             else:
@@ -110,8 +108,21 @@ def init_pins():
     except:
         pass
 
-#### change outputs when blinker signal received ###
+
 init_pins();
+
+"""Read sensor status and save it"""
+if params['o_sens'] == 'on':
+    if params['sens_t'] == 'NO':
+        if GPIO.input(sensor_pin[0]):
+            params['status'] = "CLOSED";
+        else:
+            params['status'] = "OPEN";
+    else:
+        if GPIO.input(sensor_pin[0]):
+            params['status'] = "OPEN";
+        else:
+            params['status'] = "CLOSE";
 
 
 ################################################################################
@@ -127,39 +138,38 @@ class settings(ProtectedPage):
         return template_render.door(params)
 
 
-# class settings_json(ProtectedPage):
-#     """Returns plugin settings in JSON format"""
-# 
-#     def GET(self):
-#         web.header('Access-Control-Allow-Origin', '*')
-#         web.header('Content-Type', 'application/json')
-#         return json.dumps(params)
-
-
 class update(ProtectedPage):
     """Save user input to door.json file"""
 
     def GET(self):
         qdict = web.input()
         changed = False
-        if params['enabled'] != str(qdict['enabled']):
+        print("Antes del error",params)
+        print("y la entrada: ", qdict)
+        print("y por ejemplo esto: ", str(qdict['o_full']))
+        print("pero esto fallara ", str(qdict['o_sens']))
+        if params['enabled'] != str(qdict['enabled']):           
            params['enabled'] = str(qdict['enabled'])
            changed = True             
-        if params['o_full'] != str(qdict['o_full']):  # if the open full field has changed update the params
+        if params['o_full'] != str(qdict['o_full']): # if the open full field has changed update the params           
            params['o_full'] = str(qdict['o_full'])
            changed = True
         if params['o_semi'] != str(qdict['o_semi']):  # if the open SEMI field has changed update the params
            params['o_semi'] = str(qdict['o_semi'])
            changed = True
-        if params['o_sens'] != str(qdict['o_sens']):  # if the sensor active field has changed update the params
+        if params['o_sens'] != str(qdict['o_sens']):  # if the sensor active field has changed update the params           
            params['o_sens'] = str(qdict['o_sens'])
            changed = True
-        if params['sens_t'] != str(qdict['sens_t']):  # if the sensor type field has changed update the params
+        if params['sens_t'] != str(qdict['sens_t']):  # if the sensor type field has changed update the params           
            params['sens_t'] = str(qdict['sens_t'])
            changed = True
-        if params['active'] != str(qdict['active']):  # if type of relays has changed, update the params
+        if params['active'] != str(qdict['active']):  # if type of relays has changed, update the params           
            params['active'] = str(qdict['active'])           
            changed = True
+        if params['last'] != str(qdict['last']):  # if type of relays has changed, update the params           
+           params['last'] = str(qdict['last'])           
+           changed = True
+        
         if changed:
            init_pins();
            with open('./data/door.json', 'w') as f:  # write the settings to file
@@ -168,12 +178,28 @@ class update(ProtectedPage):
       
 class fullOpen(ProtectedPage):
     ##Actuates the full open relay
-    GPIO.output(relay_pins[0], GPIO.HIGH)
-    time.sleep(1)
-    GPIO.output(relay_pins[0], GPIO.LOW)
+    
     def GET(self):
-        with open('./data/door.json', 'r') as f:  # Read the settings from file
-            params = json.load(f)
-            
+        GPIO.output(relay_pins[0], GPIO.HIGH)
+        time.sleep(1)
+        GPIO.output(relay_pins[0], GPIO.LOW)
+        print "Full door open"
+        params['last'] =  time.asctime( time.localtime(time.time()) )
+        with open('./data/door.json', 'w') as f:  # write the settings to file
+              json.dump(params, f) 
         raise web.seeother('/door')
-        print "Abriendo puerta"
+
+class semiOpen(ProtectedPage):
+    ##Actuates the full open relay
+    
+    def GET(self):
+        GPIO.output(relay_pins[1], GPIO.HIGH)
+        time.sleep(1)
+        GPIO.output(relay_pins[1], GPIO.LOW)
+        time.sleep(1)
+        print "Semi door open"
+        params['last'] =  time.asctime( time.localtime(time.time()) )
+        with open('./data/door.json', 'w') as f:  # write the settings to file
+              json.dump(params, f)             
+        raise web.seeother('/door')
+       
