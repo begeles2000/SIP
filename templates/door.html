@@ -1,6 +1,6 @@
 $def with (m_vals)
 
-$var title: $_('SIP - Door controll')
+$var title: $_('SIP - Door control')
 $var page: plugins
 <script>
    // Initialize behaviors
@@ -15,6 +15,7 @@ $var page: plugins
 	  //Actuate buttons
 	  //full open door
 	  jQuery("#cFull").click(function() {
+		 jQuery("#pluginForm").attr('action', "/doorf").submit();
          console.log('Abro la puerta');
       });
 	  //semi open door
@@ -31,7 +32,7 @@ $var page: plugins
 </script>
 
 <div id="plugin">
-   <div class="title">$_('Door controll Settings')
+   <div class="title">$_('Door control Settings')
    <button class="execute" id="docButton" type="button" >$_('Setup Help')</button>
    </div>
    <p>$_('This plugin allows SIP to control a garage door')
@@ -40,7 +41,7 @@ $var page: plugins
    <form id="pluginForm" action="/dooru" method="get">
    <table class="optionList">
     <tr>
-        <td style='text-transform: none;'>$_('Enable door controll'):</td>
+        <td style='text-transform: none;'>$_('Enable door control'):</td>
         <td><input type="checkbox" name="enabled" ${"checked" if m_vals['enabled']=='on' else "off"}></td>
     </tr>
    	<tr>
@@ -73,8 +74,20 @@ $var page: plugins
 	      <span class='tooltip'>$_('Normally Open (NO) is a contact that does not flow current in its normal state.Energizing it and switching it on will close the contact, causing it to allow current flow.. Active high does the opposite.')</span>
 	   </div></td>
 	  </tr> 	  
-   </table>
-   <br>
+    </table>
+	<br>
+    <table class="optionList">
+		<tr>
+			<td>Estado actual: </td> 
+			<td> AquiIraElEstado</td>			
+		</tr>
+		<tr>
+		<td>Ultima apertura: </td>
+		<td>HoraUltimaApertura</td>
+		</tr>
+   
+    </table>
+    <br>
    
   <p>Relays must be connected to the following GPIOS: 38 for Full open, 40 for Semi open, and sensor to pin 19</p>
    </form>

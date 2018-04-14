@@ -24,7 +24,7 @@ urls.extend(['/door', 'plugins.door.settings',
 	'/dooru', 'plugins.door.update']) 
 
 # Add this plugin to the home page plugins menu
-gv.plugin_menu.append(['Door controll', '/door'])
+gv.plugin_menu.append(['Door control', '/door'])
 
 params = {}
 
@@ -61,88 +61,56 @@ try:
         sensor_pin = [19]
         for i in range(len(relay_pins)):
             try:
-                relay_pins[i] = gv.pin_map[relay_pins[i]]
+                relay_pins[i] = gv.pin_map[relay_pins[i]]                
             except:
-                relay_pins[i] = 0
+                relay_pins[i] = 0    
     else:
-        print 'Door controll plugin only supported on pi.'
+        print 'Door control plugin only supported on pi.'
+    print ("Paso 1 he definido los relay pins", relay_pins)
 except:
-  print 'Door controll: GPIO pins not set'
+  print 'Door control: GPIO pins not set'
   pass
 
 
 #### setup GPIO pins as output and either high or low ####
 #### setup also GPIO inputs and either NO or NC       ####
 def init_pins():
-  global pi
-
-  try:
-    for i in range(params['relays']):
-        if gv.use_pigpio:
-            pi.set_mode(relay_pins[i], pigpio.OUTPUT)
-        else:
-            GPIO.setup(relay_pins[i], GPIO.OUT)
-        if params['active'] == 'low':
-            if gv.use_pigpio:
-                pi.write(relay_pins[i],1)
-            else:
-                GPIO.output(relay_pins[i], GPIO.HIGH)
-        else:
-            if gv.use_pigpio:
-                pi.write(relay_pins[i],0)
-            else:
-                GPIO.output(relay_pins[i], GPIO.LOW)
-        time.sleep(0.1)
-    #if sensor is enabled    
-    if params['o_sens'] == 'on':
-        if gv.use_pigpio:
-            pi.set_mode(sensor_pin, pigpio.INPUT)
-        else:
-            if params['sens_t'] == 'NO':
-                GPIO.setup(sensor_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) 
-            else:
-                GPIO.setup(sensor_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        
-  except:
-    pass
-
-#### change outputs when blinker signal received ####
-def on_zone_change(arg): #  arg is just a necessary placeholder.
-    """ Switch relays when core program signals a change in zone state."""
-
     global pi
+    print ("ahora voy a ponerlos en modo output")
+    try:
+        print ("entro al try y usare esta variable", relay_pins)
+        print ("para saber el rango de ", range(len(relay_pins)))
+        for i in range(len(relay_pins)):
+            print("entro al bucle for")
+            if gv.use_pigpio:
+                pi.set_mode(relay_pins[i], pigpio.OUTPUT)
+            else:
+                GPIO.setup(relay_pins[i], GPIO.OUT)
+            if params['active'] == 'low':
+                if gv.use_pigpio:
+                    pi.write(relay_pins[i],1)
+                else:
+                    GPIO.output(relay_pins[i], GPIO.HIGH)
+            else:
+                if gv.use_pigpio:
+                    pi.write(relay_pins[i],0)
+                else:
+                    GPIO.output(relay_pins[i], GPIO.LOW)
+            time.sleep(0.1)
+        #if sensor is enabled    
+        if params['o_sens'] == 'on':
+            if gv.use_pigpio:
+                pi.set_mode(sensor_pin, pigpio.INPUT)
+            else:
+                if params['sens_t'] == 'NO':
+                    GPIO.setup(sensor_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) 
+                else:
+                    GPIO.setup(sensor_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+            
+    except:
+        pass
 
-    with gv.output_srvals_lock:
-        for i in range(params['relays']):
-            try:
-                if gv.output_srvals[i]:  # if station is set to on
-                    if params['active'] == 'low':  # if the relay type is active low, set the output low
-                        if gv.use_pigpio:
-                            pi.write(relay_pins[i],0)
-                        else:
-                            GPIO.output(relay_pins[i], GPIO.LOW)
-                    else:  # otherwise set it high
-                        if gv.use_pigpio:
-                            pi.write(relay_pins[i],1)
-                        else:
-                            GPIO.output(relay_pins[i], GPIO.HIGH)
-#                     print 'relay switched on', i + 1, "pin", relay_pins[i]  #  for testing #############
-                else:  # station is set to off
-                    if params['active'] == 'low':  # if the relay type is active low, set the output high
-                        if gv.use_pigpio:
-                            pi.write(relay_pins[i],1)
-                        else:
-                            GPIO.output(relay_pins[i], GPIO.HIGH)
-                    else:  # otherwise set it low
-                        if gv.use_pigpio:
-                            pi.write(relay_pins[i],0)
-                        else:
-                            GPIO.output(relay_pins[i], GPIO.LOW)
-#                     print 'relay switched off', i + 1, "pin", relay_pins[i]  #  for testing ############
-            except Exception, e:
-                print "Problem switching relays", e, relay_pins[i]
-                pass
-
+#### change outputs when blinker signal received ###
 init_pins();
 
 
@@ -199,12 +167,13 @@ class update(ProtectedPage):
         raise web.seeother('/')
       
 class fullOpen(ProtectedPage):
-    ##Actuates the full open relay"
-    GPIO.output(sensor_pin, GPIO.HIGH)
-    sleep(1)
-    GPIO.output(sensor_pin, GPIO.LOW)
+    ##Actuates the full open relay
+    GPIO.output(relay_pins[0], GPIO.HIGH)
+    time.sleep(1)
+    GPIO.output(relay_pins[0], GPIO.LOW)
     def GET(self):
         with open('./data/door.json', 'r') as f:  # Read the settings from file
             params = json.load(f)
-        
-         raise web.seeother('/door')
+            
+        raise web.seeother('/door')
+        print "Abriendo puerta"
