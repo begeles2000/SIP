@@ -1,0 +1,17 @@
+Description: Allows the SIP program to use relays to controll a door. It can also read a sensor (magnetic sensor) to controll the state of the door
+Copyright 2018
+Author: Miguel Lorenzo
+Email:
+License: GNU GPL 3.0
+
+Requirements:
+None
+
+##### List all plugin files below preceded by a blank line [file_name.ext path] relative to SIP directory #####
+
+door.py plugins
+door.html templates
+door.json data (generated)
+#relay_6-docs.html static/docs/plugins
+#Relay_6-connect.png static/docs/images
+door.manifest plugins/manifests

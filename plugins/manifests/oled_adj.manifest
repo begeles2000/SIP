@@ -1,0 +1,10 @@
+Description: This plugin sends data to I2C for OLED 16x32 char with SSD1306.
+Author: Miguel Lorenzo
+Requirements: Adafruit_SSD1306 library
+
+##### List all plugin files below preceded by a blank line [file_name.ext path] relative to SIP directory #####
+
+oled_adj.py plugins
+oled_adj.html templates
+oled_adj.json data (generated)
+oled_adj.manifest plugins/manifests
