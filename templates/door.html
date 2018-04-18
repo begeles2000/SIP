@@ -69,8 +69,8 @@ $var page: plugins
 	  <td style='text-transform: none;'>$_('Sensor type'):</td>
 	  <td>
 	   <div class='option' title='Define the type of sensor used: NC / NO (normally closed sensor, normally open sensor)'>
-	      <input type="radio" name="sens_t" value="no" ${" checked" if m_vals[u"sens_t"]==u"NO" else ""}>$_('NO')
-	      <input type="radio" name="sens_t" value="nc" ${" checked" if m_vals[u"sens_t"]==u"NC" else ""}>$_('NC')
+	      <input type="radio" name="sens_t" value="NO" ${" checked" if m_vals[u"sens_t"]==u"NO" else ""}>$_('NO')
+	      <input type="radio" name="sens_t" value="NC" ${" checked" if m_vals[u"sens_t"]==u"NC" else ""}>$_('NC')
 	      <span class='tooltip'>$_('Normally Open (NO) is a contact that does not flow current in its normal state.Energizing it and switching it on will close the contact, causing it to allow current flow.. Active high does the opposite.')</span>
 	   </div></td>
 	  </tr> 	  
@@ -84,6 +84,7 @@ $var page: plugins
 		<tr>
 		<td><b>Ultima apertura:</b> </td>
 		<td>$m_vals['last']</td>
+		<input type="hidden" name="last" value="$m_vals['last']">
 		</tr>
    
     </table>

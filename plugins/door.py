@@ -98,13 +98,10 @@ def init_pins():
         #if sensor is enabled    
         if params['o_sens'] == 'on':
             if gv.use_pigpio:
-                pi.set_mode(sensor_pin, pigpio.INPUT)
-            else:
-                if params['sens_t'] == 'NO':
-                    GPIO.setup(sensor_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) 
-                else:
-                    GPIO.setup(sensor_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-            
+                pi.set_mode(sensor_pin[0], pigpio.INPUT)
+            else:                
+                GPIO.setup(sensor_pin[0], GPIO.IN, pull_up_down=GPIO.PUD_UP) 
+         
     except:
         pass
 
@@ -112,17 +109,19 @@ def init_pins():
 init_pins();
 
 """Read sensor status and save it"""
-if params['o_sens'] == 'on':
-    if params['sens_t'] == 'NO':
-        if GPIO.input(sensor_pin[0]):
-            params['status'] = "CLOSED";
+def update_sensor():
+    print (GPIO.input(sensor_pin[0]))
+    if params['o_sens'] == 'on':
+        if params['sens_t'] == 'NO':
+            if GPIO.input(sensor_pin[0]):
+                params['status'] = "OPEN";
+            else:
+                params['status'] = "CLOSE";
         else:
-            params['status'] = "OPEN";
-    else:
-        if GPIO.input(sensor_pin[0]):
-            params['status'] = "OPEN";
-        else:
-            params['status'] = "CLOSE";
+            if GPIO.input(sensor_pin[0]):
+                params['status'] = "CLOSE";
+            else:
+                params['status'] = "OPEN";
 
 
 ################################################################################
@@ -180,10 +179,11 @@ class fullOpen(ProtectedPage):
     ##Actuates the full open relay
     
     def GET(self):
-        GPIO.output(relay_pins[0], GPIO.HIGH)
-        time.sleep(1)
         GPIO.output(relay_pins[0], GPIO.LOW)
+        time.sleep(1)
+        GPIO.output(relay_pins[0], GPIO.HIGH)
         print "Full door open"
+        update_sensor()
         params['last'] =  time.asctime( time.localtime(time.time()) )
         with open('./data/door.json', 'w') as f:  # write the settings to file
               json.dump(params, f) 
@@ -193,9 +193,9 @@ class semiOpen(ProtectedPage):
     ##Actuates the full open relay
     
     def GET(self):
-        GPIO.output(relay_pins[1], GPIO.HIGH)
-        time.sleep(1)
         GPIO.output(relay_pins[1], GPIO.LOW)
+        time.sleep(1)
+        GPIO.output(relay_pins[1], GPIO.HIGH)
         time.sleep(1)
         print "Semi door open"
         params['last'] =  time.asctime( time.localtime(time.time()) )
