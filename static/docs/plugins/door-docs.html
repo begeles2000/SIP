@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1252">
+	<TITLE>door-docs.html</TITLE>
+	<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+    <link href="../../themes/basic/base.css" rel="stylesheet" type="text/css"/>
+</HEAD>
+<BODY LANG="en-US" BGCOLOR="#ffffff" DIR="LTR" STYLE="border: none; padding: .25in">
+<H1><A NAME="proto-plugin-documentation"></A>Door Plugin Documentation</H1>
+
+<P>This plugin is designed to operate a garage door and read its current status from a sensor</P>
+<p>The sensor used is a magnetic reed switch mounted on the door.</p>
+<p>The plugin is prepared to enable 2 types of door actuation (full open and pedestrian open) that seem to be the standard.<br>
+To do this it operates 2 relays one is switched with the FULL open button and the other one is switched with the SEMI open button.<br>
+</p>
+<ul>
+<li>The full open relay is operated from pin 38 (GPIO 20)</li>
+<li>The semi open relay is operated from pin 40 (GPIO 21)</li>
+<ul>
+
+<p>The sensor must be wired to pin 19 (GPIO 10)</p>
+
+<a href="https://www.sparkfun.com/products/13247">Exaple of Magnetic Door Switch Sparkfun</a>
+
+</BODY>
+</HTML>

@@ -16,11 +16,11 @@ $var page: plugins
 	  //Actuate buttons
 	  //full open door
 	  jQuery("#cFull").click(function() {
-		 jQuery("#pluginForm").attr('', "/doorf").submit();         
+		 window.location="/doorf";         
       });
 	  //semi open door
 	  jQuery("#cSemi").click(function() {
-         jQuery("#pluginForm").attr('', "/doors").submit();  
+        window.location="/doors";  
       });
 
        jQuery("button#docButton").click(function(){
@@ -78,11 +78,11 @@ $var page: plugins
 	<br>
     <table class="optionList">
 		<tr>
-			<td><b>Estado actual:</b> </td> 
+			<td><b>Actual status:</b> </td> 
 			<td> $m_vals['status']</td>			
 		</tr>
 		<tr>
-		<td><b>Ultima apertura:</b> </td>
+		<td><b>Last actuation:</b> </td>
 		<td>$m_vals['last']</td>
 		<input type="hidden" name="last" value="$m_vals['last']">
 		</tr>

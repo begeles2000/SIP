@@ -12,6 +12,5 @@ None
 door.py plugins
 door.html templates
 door.json data (generated)
-#relay_6-docs.html static/docs/plugins
-#Relay_6-connect.png static/docs/images
+door-docs.html static/docs/plugins
 door.manifest plugins/manifests

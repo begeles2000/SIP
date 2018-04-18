@@ -27,6 +27,20 @@ urls.extend(['/door', 'plugins.door.settings',
 # Add this plugin to the home page plugins menu
 gv.plugin_menu.append(['Door control', '/door'])
 
+# Add this to the signal plugin
+def notify_door_actuated(status, **kw):
+    print "Door actuated. Actual status {}".format(status)
+
+door_actuated = signal('door_actuated')
+door_actuated.connect(notify_door_actuated)
+
+def report_door_actuated(status):
+    """
+    Send blinker signal indicating that the door has been actuated.
+    Include the door status as data.
+    """
+    door_actuated.send(status)
+
 params = {}
 
 # Read in the parameters for this plugin from it's JSON file
@@ -142,11 +156,7 @@ class update(ProtectedPage):
 
     def GET(self):
         qdict = web.input()
-        changed = False
-        print("Antes del error",params)
-        print("y la entrada: ", qdict)
-        print("y por ejemplo esto: ", str(qdict['o_full']))
-        print("pero esto fallara ", str(qdict['o_sens']))
+        changed = False        
         if params['enabled'] != str(qdict['enabled']):           
            params['enabled'] = str(qdict['enabled'])
            changed = True             
@@ -181,9 +191,9 @@ class fullOpen(ProtectedPage):
     def GET(self):
         GPIO.output(relay_pins[0], GPIO.LOW)
         time.sleep(1)
-        GPIO.output(relay_pins[0], GPIO.HIGH)
-        print "Full door open"
+        GPIO.output(relay_pins[0], GPIO.HIGH)        
         update_sensor()
+        report_door_actuated(params['status'])
         params['last'] =  time.asctime( time.localtime(time.time()) )
         with open('./data/door.json', 'w') as f:  # write the settings to file
               json.dump(params, f) 
@@ -197,7 +207,8 @@ class semiOpen(ProtectedPage):
         time.sleep(1)
         GPIO.output(relay_pins[1], GPIO.HIGH)
         time.sleep(1)
-        print "Semi door open"
+        update_sensor()
+        report_door_actuated(params['status'])
         params['last'] =  time.asctime( time.localtime(time.time()) )
         with open('./data/door.json', 'w') as f:  # write the settings to file
               json.dump(params, f)             
